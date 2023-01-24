@@ -12,7 +12,7 @@ RUN apt-get -y install \
     iproute2 \
     openssl \
     supervisor \
-    vim
+    vim xattr
 
 RUN rm /etc/krb5.conf
 

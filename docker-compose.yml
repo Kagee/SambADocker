@@ -3,12 +3,14 @@ services:
   samba-ad-docker:
     build: .
     image: sad
+      #privileged: true
     hostname: ldap.server.dev
     container_name: ldap
-    cap_add:
+      #cap_add:
       # Samba bruker extended attributes på filer
-      - SYS_ADMIN
+      # - SYS_ADMIN
+      #- CAP_SYS_ADMIN
     environment:
       - SMB_ADMIN_PASSWORD=dette_ER_et%LANGTordSOMkanskjeERnok
-    volumes:
-      - /home/hildenae/src/sambadocker/../samba-data:/var/lib/samba
+        #    volumes:
+        #      - /home/hildenae/src/sambadocker/../samba-data:/var/lib/samba

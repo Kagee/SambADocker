@@ -21,7 +21,7 @@ samba-tool domain provision \
  --realm="server.dev" \
  --domain=DEV-AD \
  --adminpass="${SMB_ADMIN_PASSWORD}" \
- --option="posix:eadb = /usr/local/samba/private/eadb.tdb"
+ --option="posix:eadb = /var/lib/samba/private/eadb.tdb"
 mv /etc/samba/smb.conf /var/lib/samba/private/smb.conf
 
 touch /var/lib/samba/.setup
