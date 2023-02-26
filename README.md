@@ -80,8 +80,14 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 ### Base command
 * `ldapsearch -ZZ -H 'ldap://ad.example.com' -LLL -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com' '<search>' dn`
 ### Example searches
-* List single user `(samaccountname=santa)`
-* List _direct_ members of a group `(memberOf=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)` (probably not what you want)
-* List direct _and_ nested members of a group `(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_No
-rth_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)` (probably not what you want)
-* List direct and nested _user_ members of a group `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com))`
+* List single user
+  * `(samaccountname=santa)`
+  * `(distinguishedname=CN=Santa Claus,CN=Users,DC=example,DC=com)`
+  * `(userprincipalname=santa@example.com)` (not necessarily the same as the `mail` field)
+* List _direct_ members of a group (__probably not what you want__)
+  * `(memberOf=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)`
+* List direct __and__ nested members of a group (__probably not what you want__)
+  * `(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_No
+rth_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)`
+* List direct and nested _user_ members of a group (probably what you want)
+  * `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com))`
