@@ -2,7 +2,12 @@
 
 A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 
-## Usage
+## Table of Contents
+* [Usage](#usage)
+* [ad-init.sh](#ad-init-sh)
+* [ldapsearch examples](#ldapsearch-examples)
+
+## Usage <a name="usage"/>
 * `cp example.env .env`
   * Edit .env to your liking
   * You probably want to point `$SMB_HOSTNAME` to `127.0.0.1` in `/etc/hosts`
@@ -14,3 +19,58 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * Run `./ad-init.sh` if you want a simple test dataset (designed around MISP testing)
 * Run `docker-compose down` to stop samba
   * or `docker-compose down -v` to stop samda and delete data volumes
+
+
+## ad-init.sh <a name="ad-init-sh"/>
+
+[ad-init.sh](ad-init.sh) will set up the following OUs, users and groups. The base OU (`DC=example,DC=com` below) is determined by `SMB_OU` in `.env`
+
+### OUs
+* `OU=North Pole Administrators,DC=example,DC=com`
+* `OU=Access Groups,DC=example,DC=com`
+* `OU=MISP,OU=Access Groups,DC=example,DC=com`
+* `OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
+
+### Users
+
+#### santa
+* DN: `CN=Santa Claus,CN=Users,DC=example,DC=com`
+* Password: `Niew9wie2eezah`
+
+#### adminsanta
+* DN: `CN=Santa Claus,OU=North Pole Administrators,DC=example,DC=com`
+* Password: `theiKahlee1pho`
+
+#### bunny
+* DN: `CN=Easter Island Bunny,CN=Users,DC=example,DC=com`
+* Password: `Meish8somaeshe`
+
+#### fairy
+* DN: `CN=Tooth Fairy,CN=Users,DC=example,DC=com`
+* Password: `Ohsae7iuf9eoth`
+
+  
+### MISP Access and Organization groups
+* `CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_North_Pole`, `O_TTC` 
+* `CN=R_MISP_Readonly,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_TTC` 
+* `CN=R_MISP_User,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_North_Pole` 
+* `CN=R_MISP_Admin,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `adminsanta`
+* `CN=R_MISP_Publisher,OU=MISP,OU=Access Groups,DC=example,DC=com`
+* `CN=R_MISP_Org_Admin,OU=MISP,OU=Access Groups,DC=example,DC=com`
+* `CN=R_MISP_Org_TTC,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_TTC` 
+* `CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_North_Pole`
+
+### Organization groups
+* `CN=O_North_Pole,CN=Users,DC=example,DC=com`
+  * Members: `santa`, `adminsanta`, `bunny` 
+* `CN=O_TTC,CN=Users,DC=example,DC=com`
+  * Members: `fairy`
+  
+# ldapsearch examples <a name="ldapsearch-examples"/>
+* `ldapsearch -ZZ -H 'ldap://ad.example.com' -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com'`
