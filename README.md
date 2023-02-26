@@ -30,6 +30,7 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * `OU=Access Groups,DC=example,DC=com`
 * `OU=MISP,OU=Access Groups,DC=example,DC=com`
 * `OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
+* `OU=Service Users,DC=example,DC=com`
 
 ### Users
 
@@ -49,6 +50,9 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * DN: `CN=Tooth Fairy,CN=Users,DC=example,DC=com`
 * Password: `Ohsae7iuf9eoth`
 
+#### `srv_misp`
+* DN: `CN=srv_misp,OU=Service Users,DC=example,DC=com`
+* Password: `eew5Shiegheevua5iz9rohvi`
   
 ### MISP Access and Organization groups
 * `CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com`
@@ -72,5 +76,12 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * `CN=O_TTC,CN=Users,DC=example,DC=com`
   * Members: `fairy`
   
-# ldapsearch examples <a name="ldapsearch-examples"/>
-* `ldapsearch -ZZ -H 'ldap://ad.example.com' -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com'`
+## ldapsearch examples <a name="ldapsearch-examples"/>
+### Base command
+* `ldapsearch -ZZ -H 'ldap://ad.example.com' -LLL -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com' '<search>' dn`
+### Example searches
+* List single user `(samaccountname=santa)`
+* List _direct_ members of a group `(memberOf=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)` (probably not what you want)
+* List direct _and_ nested members of a group `(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_No
+rth_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)` (probably not what you want)
+* List direct and nested _user_ members of a group `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com))`

@@ -12,8 +12,11 @@ BO="$SMB_OU"
 
   # OU for admins
   $ST ou add "OU=North Pole Administrators,${BO}"
-  
-  # Sort acces groups in this OU
+
+  # OU for service users
+  $ST ou add "OU=Service Users,${BO}"
+
+  # Sort access groups in this OU
   $ST ou add "OU=Access Groups,${BO}"
   
   # Access groups for MISP
@@ -35,8 +38,11 @@ BO="$SMB_OU"
   # works for The Tooth Castle (TTC)
   $ST user add fairy Ohsae7iuf9eoth \
   	--given-name "Tooth" --surname "Fairy"
-  #	--given-name "Tooth" --surname "Fairy (external, TTC)"
-  
+
+  # Service user for i.e. apache/misp
+  $ST user add srv_misp eew5Shiegheevua5iz9rohvi \
+    --userou='OU=Service Users'
+
   # MISP Access groups
   $ST group add R_MISP_Access --description='MISP Access control' --groupou='OU=MISP,OU=Access Groups'
   $ST group add R_MISP_User --description='MISP Role User' --groupou='OU=MISP,OU=Access Groups'
