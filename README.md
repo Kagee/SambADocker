@@ -78,7 +78,13 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
   
 ## ldapsearch examples <a name="ldapsearch-examples"/>
 ### Base command
-* `ldapsearch -ZZ -H 'ldap://ad.example.com' -LLL -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com' '<search>' dn`
+`ldapsearch -ZZ -H 'ldap://ad.example.com' -LLL -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com' '<search>' dn`
+
+* `-ZZ`: Require StartTLS
+* Replace `-w  "$SMB_ADMIN_PASSWORD"` with `-W` if you want to be asked for the passord and not have it on the command line. 
+* ldapsearch is bad at giving error messages. Add `-d 9` to the command for maximum debug output that will give much more info.
+* If you have a invalid TLS setup, you can prefix the `ldapsearch` command with `LDAPTLS_REQCERT=allow `
+
 ### Example searches
 * List single user
   * `(samaccountname=santa)`
