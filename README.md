@@ -89,7 +89,8 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * List single user
   * `(samaccountname=santa)`
   * `(distinguishedname=CN=Santa Claus,CN=Users,DC=example,DC=com)`
-  * `(userprincipalname=santa@example.com)` (not necessarily the same as the `mail` field)
+  * `(userprincipalname=santa@example.com)` (may look like, but not necessarily the same as the `mail` field)
+  * `(mail=santa@northpole.example.com)`
 * List _direct_ members of a group (__probably not what you want__)
   * `(memberOf=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)`
 * List direct __and__ nested members of a group (__probably not what you want__)

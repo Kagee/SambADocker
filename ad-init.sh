@@ -25,19 +25,29 @@ BO="$SMB_OU"
   
   # Santa, normal user and admin account
   $ST user add santa Niew9wie2eezah \
-  	--given-name "Santa" --surname "Claus"  
+  	--given-name "Santa" --surname "Claus" \
+    --mail-address="santa@northpole.example.com" \
+    --company="North Pole" --description="Wears a red hat"
+  # Admin user has no mail, this is on purpose for a test case
   $ST user add adminsanta theiKahlee1pho \
   	--given-name "AdminSanta" --surname "Claus" \
+    --company="North Pole" --description="Wears two red hats" \
   	--userou='OU=North Pole Administrators'
   
   # The easter bunny works for Santa most of the year
   $ST user add bunny Meish8somaeshe \
-  	--given-name "Easter Island" --surname "Bunny"
+  	--given-name "Easter Island" --surname "Bunny" \
+    --mail-address="bunny@northpole.example.com" \
+    --company="North Pole" \
+    --description="Brown fur, obsession with eggs"
   
   # The tooth fairy has an AD account, but 
   # works for The Tooth Castle (TTC)
   $ST user add fairy Ohsae7iuf9eoth \
-  	--given-name "Tooth" --surname "Fairy"
+  	--given-name "Tooth" --surname "Fairy" \
+    --mail-address="fairy@tooth-castle.example.com" \
+    --company="The Tooth Castle" \
+    --description='Will pay $1 for anythin white, small and sharp'
 
   # Service user for i.e. apache/misp
   $ST user add srv_misp eew5Shiegheevua5iz9rohvi \
