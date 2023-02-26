@@ -74,6 +74,9 @@ BO="$SMB_OU"
   $ST group addmembers R_MISP_User O_North_Pole
   # Santa gets admin access if he uses his admin account
   $ST group addmembers R_MISP_Admin adminsanta
+
+  $ST group addmembers R_MISP_Org_North_Pole O_North_Pole
+  $ST group addmembers R_MISP_Org_TTC O_TTC
 } | grep -v 'already exists'
 
 echo "Init complete. If there was no output there were no errors and all values already existed."
