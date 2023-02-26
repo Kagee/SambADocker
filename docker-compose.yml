@@ -2,12 +2,17 @@ version: "3.0"
 services:
   samba-ad-docker:
     build: .
-    image: sad
-    hostname: ldap.server.dev
-    container_name: ldap
-    environment:
-      - SMB_ADMIN_PASSWORD=dette_ER_et%LANGTordSOMkanskjeERnok
+    image: $IMG_PREFIX/sambadocker
+    # Add this hostname to /etc/hosts
+    # and point it to 127.0.0.x
+    hostname: $SMB_HOSTNAME
+    container_name: sambad
+    env_file: .env
     volumes:
-       - ./data:/var/lib/samba
+       - samba_data:/var/lib/samba
     ports:
-       - "127.0.0.2:1636:636"
+       # We only care about LDAP (with StarTLS)
+       - "0.0.0.0:389:389"
+
+volumes:
+  samba_data:

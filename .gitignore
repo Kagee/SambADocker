@@ -1,1 +1,6 @@
-data
+# Make your own based 
+# on example.env
+.env
+# Sorry, you gotta make
+# these yourself
+files/private/*

@@ -12,11 +12,15 @@ RUN apt-get -y install \
     iproute2 \
     openssl \
     supervisor \
-    vim xattr
+    vim \
+    xattr
 
 RUN rm /etc/krb5.conf
 
 COPY files/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+# Install certificates in docker
+COPY files/private /etc/ssl/private
 
 RUN mkdir -p /opt/sambadocker
 WORKDIR /opt/sambadocker
@@ -25,4 +29,6 @@ COPY files/samba-ad-run.sh /opt/sambadocker/
 COPY files/samba-ad-setup.sh /opt/sambadocker/
  
 EXPOSE 80
-CMD ["/usr/bin/supervisord"]
+# Hardcode config so supervisord
+# complains less
+CMD ["/usr/bin/supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
