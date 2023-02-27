@@ -98,16 +98,3 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 rth_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)`
 * List direct and nested _user_ members of a group (probably what you want)
   * `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com))`
-
-## TODO
-Users / groups / OUs to add:
-Japanese:
-Test user: 浦島太郎 (URASHIMA Taro) last name: URASHIMA, first name: Taro. Formal 「浦島　太郎 」or 「浦島 太郎」(with either space type, 「」means just same as " " in Japanese) common female eample name is 花子(Hanako)
-https://etc.usf.edu/lit2go/72/japanese-fairy-tales/4881/the-story-of-urashima-taro-the-fisher-lad/
-"fairy tale": 昔話 - Mukashibanashi
-"Group 1": グループ１
-
-Chinese (singapore)
-Test user: Ye Xian/ 葉限 / 叶限 https://en.m.wikipedia.org/wiki/Ye_Xian
-"fairy tale": 童话
-"Group 1": 第一组
