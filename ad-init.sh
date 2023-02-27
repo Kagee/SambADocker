@@ -93,8 +93,8 @@ BO="$SMB_OU"
 
   $ST group add O_North_Pole --description='Group for users emplyed by North Pole'
   $ST group add O_TTC --description='Group for users emplyed by The Tooth Castle'
-  $ST group add グループ１ --description='Group 1 (JP)'
-  $ST group add 第一组 --description='Group 1 (CH)'
+  $ST group add O_グループ１ --description='Group 1 (JP)'
+  $ST group add O_第一组 --description='Group 1 (CH)'
 
   # Organizational groups
   for USER in santa adminsanta bunny; do
@@ -104,12 +104,12 @@ BO="$SMB_OU"
   done
 
   $ST group addmembers O_TTC fairy
-  $ST group addmembers グループ１ 浦島太郎
-  $ST group addmembers 第一组 葉限
+  $ST group addmembers O_グループ１ 浦島太郎
+  $ST group addmembers O_第一组 葉限
 
   # Nested groups
   # Everyone employed by North Pole or TTC has MISP access
-  for ORG in O_North_Pole O_TTC グループ１ 第一组; do
+  for ORG in O_North_Pole O_TTC O_グループ１ O_第一组; do
     # addmembers supports a list, but will fail
     # if any member already exists
     $ST group addmembers R_MISP_Access $ORG
@@ -119,7 +119,7 @@ BO="$SMB_OU"
   $ST group addmembers R_MISP_Readonly O_TTC
 
   # All North Pole employees, and user in group 1 have user access
-  for ORG in O_North_Pole グループ１ 第一组; do
+  for ORG in O_North_Pole O_グループ１ O_第一组; do
     # addmembers supports a list, but will fail
     # if any member already exists
     $ST group addmembers R_MISP_User $ORG
@@ -130,8 +130,8 @@ BO="$SMB_OU"
 
   $ST group addmembers R_MISP_Org_North_Pole O_North_Pole
   $ST group addmembers R_MISP_Org_TTC O_TTC
-  $ST group addmembers R_MISP_Org_昔話 グループ１
-  $ST group addmembers R_MISP_Org_童话 第一组
+  $ST group addmembers R_MISP_Org_昔話 O_グループ１
+  $ST group addmembers R_MISP_Org_童话 O_第一组
 } | grep -v 'already exists'
 
 echo "Init complete. If there was no output there were no errors and all values already existed."
