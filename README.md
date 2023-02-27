@@ -27,10 +27,14 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 
 ### OUs
 * `OU=North Pole Administrators,DC=example,DC=com`
+* `OU=Service Users,DC=example,DC=com`
 * `OU=Access Groups,DC=example,DC=com`
+* `OU=More Users,DC=example,DC=com`
+* `OU=昔話,OU=More Users,DC=example,DC=com` ("fairy tale", JP)
+* `OU=童话,OU=More Users,DC=example,DC=com` ("fairy tale", CH)
 * `OU=MISP,OU=Access Groups,DC=example,DC=com`
 * `OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
-* `OU=Service Users,DC=example,DC=com`
+
 
 ### Users
 
@@ -50,17 +54,25 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * DN: `CN=Tooth Fairy,CN=Users,DC=example,DC=com`
 * Password: `Ohsae7iuf9eoth`
 
+#### 浦島太郎 (Urashima Tarō)
+* DN: `CN=太郎 浦島,OU=昔話,OU=More Users,DC=example,DC=com`
+* Password: `phee0udai3Ae`
+
+#### 葉限 (Ye Xian)
+* DN: `CN=限 葉,OU=童话,OU=More Users,DC=example,DC=com`
+* Password: `EiDochou8ohf`
+
 #### `srv_misp`
 * DN: `CN=srv_misp,OU=Service Users,DC=example,DC=com`
 * Password: `eew5Shiegheevua5iz9rohvi`
-  
+
 ### MISP Access and Organization groups
 * `CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com`
-  * Members: `O_North_Pole`, `O_TTC` 
+  * Members: `O_North_Pole`, `O_TTC`, `O_グループ１`, `O_第一组`
 * `CN=R_MISP_Readonly,OU=MISP,OU=Access Groups,DC=example,DC=com`
   * Members: `O_TTC` 
 * `CN=R_MISP_User,OU=MISP,OU=Access Groups,DC=example,DC=com`
-  * Members: `O_North_Pole` 
+  * Members: `O_North_Pole`, `O_グループ１`, `O_第一组`
 * `CN=R_MISP_Admin,OU=MISP,OU=Access Groups,DC=example,DC=com`
   * Members: `adminsanta`
 * `CN=R_MISP_Publisher,OU=MISP,OU=Access Groups,DC=example,DC=com`
@@ -69,13 +81,21 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
   * Members: `O_TTC` 
 * `CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
   * Members: `O_North_Pole`
+* `CN=R_MISP_Org_昔話,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_グループ１`
+* `CN=R_MISP_Org_童话,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_第一组`
 
 ### Organization groups
 * `CN=O_North_Pole,CN=Users,DC=example,DC=com`
   * Members: `santa`, `adminsanta`, `bunny` 
 * `CN=O_TTC,CN=Users,DC=example,DC=com`
   * Members: `fairy`
-  
+* `CN=O_グループ１,CN=Users,DC=example,DC=com` (Group 1, JP)
+  * `浦島太郎` (Urashima Tarō)
+* `CN=O_第一组,CN=Users,DC=example,DC=com`  (Group 1, JP)
+  * `葉限` (Ye Xian)
+
 ## ldapsearch examples <a name="ldapsearch-examples"/>
 ### Base command
 `ldapsearch -ZZ -H 'ldap://ad.example.com' -LLL -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com' '<search>' dn`
@@ -94,7 +114,6 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * List _direct_ members of a group (__probably not what you want__)
   * `(memberOf=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)`
 * List direct __and__ nested members of a group (__probably not what you want__)
-  * `(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_No
-rth_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)`
+  * `(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com)`
 * List direct and nested _user_ members of a group (probably what you want)
-  * `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com))`
+  * `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com))`
