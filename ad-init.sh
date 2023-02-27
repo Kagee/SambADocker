@@ -65,7 +65,7 @@ BO="$SMB_OU"
     --userou='OU=昔話,OU=More Users'
 
   # https://en.wikipedia.org/wiki/Ye_Xian
-  $ST user add  葉限 EiDochou8ohf \
+  $ST user add 葉限 EiDochou8ohf \
     --given-name "限" --surname "葉" \
     --mail-address="葉限@xn--iuzn16a.example.com" \
     --company="童话" \
