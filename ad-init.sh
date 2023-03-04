@@ -96,6 +96,9 @@ BO="$SMB_OU"
   $ST group add O_グループ１ --description='Group 1 (JP)'
   $ST group add O_第一组 --description='Group 1 (CH)'
 
+  # Make adminsanta a proper admin
+  $ST group addmembers Administrators adminsanta
+
   # Organizational groups
   for USER in santa adminsanta bunny; do
     # addmembers supports a list, but will fail
