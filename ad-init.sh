@@ -76,8 +76,9 @@ BO="$SMB_OU"
     --userou='OU=Service Users'
 
   # MISP Access groups
-  $ST group add R_MISP_Access --description='MISP Access control' --groupou='OU=MISP,OU=Access Groups'
-  $ST group add R_MISP_User --description='MISP Role User' --groupou='OU=MISP,OU=Access Groups'
+  # Access and User has spaces in their name on purpose
+  $ST group add "R_MISP Access" --description='MISP Access control' --groupou='OU=MISP,OU=Access Groups'
+  $ST group add "R_MISP User" --description='MISP Role User' --groupou='OU=MISP,OU=Access Groups'
   $ST group add R_MISP_Admin --description='MISP Role Admin' --groupou='OU=MISP,OU=Access Groups'
   $ST group add R_MISP_Readonly --description='MISP Role Readonly' --groupou='OU=MISP,OU=Access Groups'
   $ST group add R_MISP_Publisher --description='MISP Role Publisher' --groupou='OU=MISP,OU=Access Groups'
@@ -114,7 +115,7 @@ BO="$SMB_OU"
   for ORG in O_North_Pole O_TTC O_グループ１ O_第一组; do
     # addmembers supports a list, but will fail
     # if any member already exists
-    $ST group addmembers R_MISP_Access $ORG
+    $ST group addmembers "R_MISP Access" $ORG
   done
 
   # TTC Employees only have RO access
@@ -124,7 +125,7 @@ BO="$SMB_OU"
   for ORG in O_North_Pole O_グループ１ O_第一组; do
     # addmembers supports a list, but will fail
     # if any member already exists
-    $ST group addmembers R_MISP_User $ORG
+    $ST group addmembers "R_MISP User" $ORG
   done
 
   # Santa gets admin access if he uses his admin account

@@ -82,12 +82,14 @@ Some users (adminsanta, 浦島太郎) have no email, this is on purpose.
 * Email: No email
 
 ### MISP Access and Organization groups
-* `CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com`
+* `CN=R_MISP Access,OU=MISP,OU=Access Groups,DC=example,DC=com`
   * Members: `O_North_Pole`, `O_TTC`, `O_グループ１`, `O_第一组`
+  * Space in name on purpose
 * `CN=R_MISP_Readonly,OU=MISP,OU=Access Groups,DC=example,DC=com`
-  * Members: `O_TTC` 
-* `CN=R_MISP_User,OU=MISP,OU=Access Groups,DC=example,DC=com`
+  * Members: `O_TTC`
+* `CN=R_MISP User,OU=MISP,OU=Access Groups,DC=example,DC=com`
   * Members: `O_North_Pole`, `O_グループ１`, `O_第一组`
+  * Space in name on purpose
 * `CN=R_MISP_Admin,OU=MISP,OU=Access Groups,DC=example,DC=com`
   * Members: `adminsanta`
 * `CN=R_MISP_Publisher,OU=MISP,OU=Access Groups,DC=example,DC=com`
@@ -129,6 +131,6 @@ Some users (adminsanta, 浦島太郎) have no email, this is on purpose.
 * List _direct_ members of a group (__probably not what you want__)
   * `(memberOf=CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com)`
 * List direct __and__ nested members of a group (__probably not what you want__)
-  * `(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com)`
+  * `(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP Access,OU=MISP,OU=Access Groups,DC=example,DC=com)`
 * List direct and nested _user_ members of a group (probably what you want)
-  * `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com))`
+  * `(&(objectCategory=user)(memberOf:1.2.840.113556.1.4.1941:=CN=R_MISP Access,OU=MISP,OU=Access Groups,DC=example,DC=com))`
