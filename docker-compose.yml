@@ -11,8 +11,9 @@ services:
     volumes:
        - samba_data:/var/lib/samba
     ports:
-       # We only care about LDAP (with StarTLS)
+       # We only care about LDAP
        - "0.0.0.0:389:389"
+       - "0.0.0.0:686:686"
 
 volumes:
   samba_data:
