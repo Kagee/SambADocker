@@ -4,7 +4,7 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 
 ## Table of Contents
 * [Usage](#usage)
-* [ad-init.sh](#ad-init-sh)
+* [Defaults](ad-content)
 * [ldapsearch examples](#ldapsearch-examples)
 
 ## Usage <a name="usage"/>
@@ -21,9 +21,15 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
   * or `docker-compose down -v` to stop samda and delete data volumes
 
 
-## ad-init.sh <a name="ad-init-sh"/>
+## Defaults
 
-[ad-init.sh](ad-init.sh) will set up the following OUs, users and groups. The base OU (`DC=example,DC=com` below) is determined by `SMB_OU` in `.env`
+Default AD users, groups and OUs
+
+The base OU, realm and domain is determined by the values in `.env` as used by `samba-tool domain provision`
+
+The default values will result in a base OU of `DC=example,DC=com`, a realm of `example.com` and a `administrator` user (`CN=Administrator,CN=Users,DC=example,DC=com`) with the passord `dette_ER_et%LANGTordSOMkanskjeERnok`
+
+The script [ad-init.sh](ad-init.sh) will set up the following OUs, users and groups:
 
 ### OUs
 * `OU=North Pole Administrators,DC=example,DC=com`
