@@ -29,7 +29,9 @@ The base OU, realm and domain is determined by the values in `.env` as used by `
 
 The default values will result in a base OU of `DC=example,DC=com`, a realm of `example.com` and a `administrator` user (`CN=Administrator,CN=Users,DC=example,DC=com`) with the passord `dette_ER_et%LANGTordSOMkanskjeERnok`
 
-The script [ad-init.sh](ad-init.sh) will set up the following OUs, users and groups:
+The script [ad-init.sh](ad-init.sh) will set up the following OUs, users and groups.
+
+Some users (adminsanta, 浦島太郎) have no email, this is on purpose.
 
 ### OUs
 * `OU=North Pole Administrators,DC=example,DC=com`
@@ -47,30 +49,37 @@ The script [ad-init.sh](ad-init.sh) will set up the following OUs, users and gro
 #### santa
 * DN: `CN=Santa Claus,CN=Users,DC=example,DC=com`
 * Password: `Niew9wie2eezah`
+* Email: `santa@northpole.example.com`
 
 #### adminsanta
 * DN: `CN=Santa Claus,OU=North Pole Administrators,DC=example,DC=com`
 * Password: `theiKahlee1pho`
+* Email: No email
 
 #### bunny
 * DN: `CN=Easter Island Bunny,CN=Users,DC=example,DC=com`
 * Password: `Meish8somaeshe`
+* Email: `bunny@northpole.example.com`
 
 #### fairy
 * DN: `CN=Tooth Fairy,CN=Users,DC=example,DC=com`
 * Password: `Ohsae7iuf9eoth`
+* Email: `fairy@tooth-castle.example.com`
 
 #### 浦島太郎 (Urashima Tarō)
 * DN: `CN=太郎 浦島,OU=昔話,OU=More Users,DC=example,DC=com`
 * Password: `phee0udai3Ae`
+* Email: No email
 
 #### 葉限 (Ye Xian)
 * DN: `CN=限 葉,OU=童话,OU=More Users,DC=example,DC=com`
 * Password: `EiDochou8ohf`
+* Email: `葉限@xn--iuzn16a.example.com`
 
 #### `srv_misp`
 * DN: `CN=srv_misp,OU=Service Users,DC=example,DC=com`
 * Password: `eew5Shiegheevua5iz9rohvi`
+* Email: No email
 
 ### MISP Access and Organization groups
 * `CN=R_MISP_Access,OU=MISP,OU=Access Groups,DC=example,DC=com`

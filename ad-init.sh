@@ -59,7 +59,6 @@ BO="$SMB_OU"
   # https://en.wikipedia.org/wiki/Urashima_Tar%C5%8D
   $ST user add 浦島太郎 phee0udai3Ae \
     --given-name "太郎" --surname "浦島" \
-    --mail-address="浦島太郎@xn--8hv822f.example.com" \
     --company="昔話" \
     --description='Urashima Tarō. Not so good at reading the calendar.' \
     --userou='OU=昔話,OU=More Users'
