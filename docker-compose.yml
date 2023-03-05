@@ -13,7 +13,7 @@ services:
     ports:
        # We only care about LDAP
        - "0.0.0.0:389:389"
-       - "0.0.0.0:686:686"
+       - "0.0.0.0:636:636"
 
 volumes:
   samba_data:
