@@ -59,6 +59,14 @@ BO="$SMB_OU"
     --company="The Tooth Castle" \
     --description='Will pay $1 for anythin white, small and sharp'
 
+  # Pål Askeladd also as an AD account, and
+  # works for The Tooth Castle (TTC)
+  $ST user add pål Nei8iesh6tuFe0 \
+    --given-name "Askeladd" --surname "Pål" \
+    --mail-address="paal@tooth-castle.example.com" \
+    --company="The Tooth Castle" \
+    --description='Some problems with hearing.'
+
   # https://en.wikipedia.org/wiki/Urashima_Tar%C5%8D
   $ST user add 浦島太郎 phee0udai3Ae \
     --given-name "太郎" --surname "浦島" \
