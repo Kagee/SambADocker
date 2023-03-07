@@ -29,7 +29,7 @@ The base OU, realm and domain is determined by the values in `.env` as used by `
 
 The default values will result in a base OU of `DC=example,DC=com`, a realm of `example.com` and a `administrator` user (`CN=Administrator,CN=Users,DC=example,DC=com`) with the passord `dette_ER_et%LANGTordSOMkanskjeERnok`
 
-The script [ad-init.sh](ad-init.sh) will set up the following OUs, users and groups.
+The script [ad-init.sh](ad-init.sh) will set up a number of OUs, users and groups for testing. The script currently have test data for English, Japanese, Chinese, Hindi, Arabic and Norwegian.
 
 Some users (adminsanta, 浦島太郎) have no email, this is on purpose.
 
