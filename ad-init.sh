@@ -23,8 +23,9 @@ BO="$SMB_OU"
   # Put some users in other OUs
   $ST ou add "OU=More Users,${BO}"
   $ST ou add "OU=昔話,OU=More Users,${BO}" --description "Fairy Tale (JP)"
-
   $ST ou add "OU=童话,OU=More Users,${BO}" --description "Fairy Tale (CH)"
+  # \u062D\u0643\u0627\u064A\u0629 \u062E\u064A\u0627\u0644\u064A\u0629
+  $ST ou add "OU=حكاية خيالية,OU=More Users,${BO}" --description "Fairy Tale (AR)"
 
   # Access groups for MISP
   $ST ou add "OU=MISP,OU=Access Groups,${BO}"
@@ -70,6 +71,25 @@ BO="$SMB_OU"
     --company="童话" \
     --description='Ye Xian. Got a pair of really nice slippers.' \
     --userou='OU=童话,OU=More Users'
+  # https://arabiannights.fandom.com/wiki/The_Tale_of_Zayn_al-Asnam
+  # In Arabic, assimilation الإِدْغَام happens when two 
+  # identical letters (or rather sounds) or comparatively 
+  # similar sounds become one geminate (doubled) 
+  # sound / letter حَرْف مُشَدَّد.
+  # Thus the username looks different than just 
+  # smushing last and first name togehter.
+  # \u0632\u064A\u0646\u0627\u0644\u0627\u0635\u0646\u0627\u0645
+  $ST user add "زينالاصنام" password123 \
+  # "\u0632\u064A\u0646" "\u0627\u0644\u0627\u0635\u0646\u0627\u0645"
+  --given-name "زين" --surname "الاصنام" \
+  # We combine this with a -, not removing space,
+  # so the grapheme clusters remain for حكاية-خيالية.example.com
+  # And we combine first and last name with a dot.
+  # \u0632\u064A\u0646.\u0627\u0644\u0627\u0635\u0646\u0627\u0645
+  --mail-address="زين.الاصنام@xn----ymcbgctk8noa9cdc.example.com" \
+  --company="حكاية خيالية" \
+  --description='Zayn Al-Asnam. Not so good with money and duties.' \
+  --userou='OU=حكاية خيالية,OU=More Users'
 
   # Service user for i.e. apache/misp
   $ST user add srv_misp eew5Shiegheevua5iz9rohvi \
@@ -95,6 +115,8 @@ BO="$SMB_OU"
   $ST group add O_TTC --description='Group for users emplyed by The Tooth Castle'
   $ST group add O_グループ１ --description='Group 1 (JP)'
   $ST group add O_第一组 --description='Group 1 (CH)'
+  # "O_\u0645\u062C\u0645\u0648\u0639\u0629 1"
+  $ST group add "O_مجموعة 1" --description='Group 1 (AR)'
 
   # Make adminsanta a proper admin
   $ST group addmembers Administrators adminsanta
@@ -109,10 +131,13 @@ BO="$SMB_OU"
   $ST group addmembers O_TTC fairy
   $ST group addmembers O_グループ１ 浦島太郎
   $ST group addmembers O_第一组 葉限
-
+  # "O_\u0645\u062C\u0645\u0648\u0639\u0629 1" "\u0632\u064A\u0646\u0627\u0644\u0627\u0635\u0646\u0627\u0645"
+  # Yes, it looks backwards.
+  $ST group addmembers "O_مجموعة 1" "زينالاصنام"
+  
   # Nested groups
   # Everyone employed by North Pole or TTC has MISP access
-  for ORG in O_North_Pole O_TTC O_グループ１ O_第一组; do
+  for ORG in O_North_Pole O_TTC "O_グループ１" "O_第一组" "O_مجموعة 1"; do
     # addmembers supports a list, but will fail
     # if any member already exists
     $ST group addmembers "R_MISP Access" $ORG
@@ -122,7 +147,7 @@ BO="$SMB_OU"
   $ST group addmembers R_MISP_Readonly O_TTC
 
   # All North Pole employees, and user in group 1 have user access
-  for ORG in O_North_Pole O_グループ１ O_第一组; do
+  for ORG in O_North_Pole "O_グループ１" "O_第一组" "O_مجموعة 1"; do
     # addmembers supports a list, but will fail
     # if any member already exists
     $ST group addmembers "R_MISP User" $ORG
@@ -135,6 +160,7 @@ BO="$SMB_OU"
   $ST group addmembers R_MISP_Org_TTC O_TTC
   $ST group addmembers R_MISP_Org_昔話 O_グループ１
   $ST group addmembers R_MISP_Org_童话 O_第一组
+  $ST group addmembers "R_MISP_Org_مجموعة 1" "O_مجموعة 1"
 } | grep -v 'already exists'
 
 echo "Init complete. If there was no output there were no errors and all values already existed."
