@@ -176,8 +176,7 @@ BO="$SMB_OU"
   $ST group addmembers R_MISP_Org_TTC O_TTC
   $ST group addmembers R_MISP_Org_昔話 O_グループ１
   $ST group addmembers R_MISP_Org_童话 O_第一组
-  # This one has a space in it ...
-  $ST group addmembers "R_MISP_Org_حكاية خيالية" "O_مجموعة 1"
+  $ST group addmembers "R_MISP_Org_حكايةخيالية" "O_مجموعة 1"
   $ST group add "R_MISP_Org_कहानी" "O_समूह १"
   
 } | grep -v 'already exists'
