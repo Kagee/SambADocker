@@ -3,7 +3,12 @@
 # Set up OUs, users and groups in AD
 # based on fairytale characters
 
-source <(grep -v '^#' .env | sed 's/^/export /')
+set -u
+# shellcheck disable=SC1090
+#source <(grep -v '^#' .env | sed 's/^/export /')
+
+# shellcheck disable=SC2046
+export $(grep '^SMB_OU' .env)
 
 ST="docker exec -it sambad samba-tool"
 BO="$SMB_OU"
@@ -28,7 +33,7 @@ BO="$SMB_OU"
   $ST ou add "OU=حكاية خيالية,OU=More Users,${BO}" --description "Fairy Tale (AR)"
   # \u0915\u0939\u093E\u0928\u0940
   $ST ou add "OU=कहानी,OU=More Users,${BO}" --description "Fairy Tale (HI)"
-  
+
   # OUs for MISP access groups
   $ST ou add "OU=MISP,OU=Access Groups,${BO}"
   $ST ou add "OU=Organizations,OU=MISP,OU=Access Groups,${BO}"
@@ -57,7 +62,7 @@ BO="$SMB_OU"
     --given-name "Tooth" --surname "Fairy" \
     --mail-address="fairy@tooth-castle.example.com" \
     --company="The Tooth Castle" \
-    --description='Will pay $1 for anythin white, small and sharp'
+    --description='Will pay USD 1 for anythin white, small and sharp'
 
   # Pål Askeladd also as an AD account, and
   # works for The Tooth Castle (TTC)
@@ -81,7 +86,7 @@ BO="$SMB_OU"
     --company="童话" \
     --description='Ye Xian. Got a pair of really nice slippers.' \
     --userou='OU=童话,OU=More Users'
-    
+
   # https://arabiannights.fandom.com/wiki/The_Tale_of_Zayn_al-Asnam
   # In Arabic, assimilation الإِدْغَام happens when two 
   # identical letters (or rather sounds) or comparatively 
@@ -90,21 +95,21 @@ BO="$SMB_OU"
   # Thus the username looks different than just 
   # smushing last and first name togehter.
   # \u0632\u064A\u0646\u0627\u0644\u0627\u0635\u0646\u0627\u0645
-  $ST user add "زينالاصنام" Nei8iesh6tuFe0 \
   # "\u0632\u064A\u0646" "\u0627\u0644\u0627\u0635\u0646\u0627\u0645"
-  --given-name "زين" --surname "الاصنام" \
   # We combine this with a -, not removing space,
   # so the grapheme clusters remain for حكاية-خيالية.example.com
   # And we combine first and last name with a dot.
   # \u0632\u064A\u0646.\u0627\u0644\u0627\u0635\u0646\u0627\u0645
+  $ST user add "زينالاصنام" Nei8iesh6tuFe0 \
+  --given-name "زين" --surname "الاصنام" \
   --mail-address="زين.الاصنام@xn----ymcbgctk8noa9cdc.example.com" \
   --company="حكاية خيالية" \
   --description='Zayn Al-Asnam. Not so good with money and duties.' \
   --userou='OU=حكاية خيالية,OU=More Users'
 
   # https://en.m.wikipedia.org/wiki/Chacha_Chaudhary
-  $ST user add "चाचाचौधरी" aphasaeng5Bei9 \
     # "\u091A\u093E\u091A\u093E""\u091A\u094C\u0927\u0930\u0940"
+  $ST user add "चाचाचौधरी" aphasaeng5Bei9 \
     --given-name "चाचा" --surname "चौधरी" \
     --mail-address="चाचाचौधरी@xn--11b2b9bual.example.com" \
     --company="कहानी" \
@@ -129,8 +134,9 @@ BO="$SMB_OU"
   $ST group add R_MISP_Org_North_Pole --description='MISP Org North Pole' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
   $ST group add R_MISP_Org_昔話 --description='MISP Org 昔話 (JP)' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
   $ST group add R_MISP_Org_童话 --description='MISP Org 童话 (CH)' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
-
-
+  $ST group add "R_MISP_Org_حكايةخيالية"  --description='MISP Org حكايةخيالية (AR)' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
+  $ST group add "R_MISP_Org_कहानी" --description='MISP Org कहानी (HI)' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
+  
   $ST group add O_North_Pole --description='Group for users emplyed by North Pole'
   $ST group add O_TTC --description='Group for users emplyed by The Tooth Castle'
   $ST group add O_グループ１ --description='Group 1 (JP)'
@@ -139,7 +145,7 @@ BO="$SMB_OU"
   $ST group add "O_مجموعة 1" --description='Group 1 (AR)'
   # "\u0938\u092E\u0942\u0939 \u0967"
   $ST group add "O_समूह १" --description='Group 1 (HI)'
-  
+
   # Make adminsanta a proper admin
   $ST group addmembers Administrators adminsanta
 
@@ -158,13 +164,13 @@ BO="$SMB_OU"
   $ST group addmembers "O_مجموعة 1" "زينالاصنام"
   # "\u0938\u092E\u0942\u0939 \u0967" "\u091A\u093E\u091A\u093E\u091A\u094C\u0927\u0930\u0940"
   $ST group addmembers "O_समूह १" "चाचाचौधरी"
-  
+
   # Nested groups
   # Everyone employed by North Pole or TTC has MISP access
   for ORG in O_North_Pole O_TTC "O_グループ１" "O_第一组" "O_مجموعة 1" "O_समूह १"; do
     # addmembers supports a list, but will fail
     # if any member already exists
-    $ST group addmembers "R_MISP Access" $ORG
+    $ST group addmembers "R_MISP Access" "$ORG"
   done
 
   # TTC Employees only have RO access
@@ -174,7 +180,7 @@ BO="$SMB_OU"
   for ORG in O_North_Pole "O_グループ１" "O_第一组" "O_مجموعة 1" "O_समूह १"; do
     # addmembers supports a list, but will fail
     # if any member already exists
-    $ST group addmembers "R_MISP User" $ORG
+    $ST group addmembers "R_MISP User" "$ORG"
   done
 
   # Santa gets admin access if he uses his admin account
@@ -185,8 +191,8 @@ BO="$SMB_OU"
   $ST group addmembers R_MISP_Org_昔話 O_グループ１
   $ST group addmembers R_MISP_Org_童话 O_第一组
   $ST group addmembers "R_MISP_Org_حكايةخيالية" "O_مجموعة 1"
-  $ST group add "R_MISP_Org_कहानी" "O_समूह १"
-  
+  $ST group addmembers "R_MISP_Org_कहानी" "O_समूह १"
+
 } | grep -v 'already exists'
 
 echo "Init complete. If there was no output there were no errors and all values already existed."
