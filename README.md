@@ -95,7 +95,7 @@ Some users (adminsanta, 浦島太郎) have no email, this is on purpose.
 * `CN=R_MISP_Publisher,OU=MISP,OU=Access Groups,DC=example,DC=com`
 * `CN=R_MISP_Org_Admin,OU=MISP,OU=Access Groups,DC=example,DC=com`
 * `CN=R_MISP_Org_TTC,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
-  * Members: `O_TTC` 
+  * Members: `O_TTC`
 * `CN=R_MISP_Org_North_Pole,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
   * Members: `O_North_Pole`
 * `CN=R_MISP_Org_昔話,OU=Organizations,OU=MISP,OU=Access Groups,DC=example,DC=com`
@@ -118,8 +118,9 @@ Some users (adminsanta, 浦島太郎) have no email, this is on purpose.
 `ldapsearch -ZZ -H 'ldap://ad.example.com' -LLL -D 'CN=Administrator,CN=Users,DC=example,DC=com' -w "$SMB_ADMIN_PASSWORD" -b 'DC=example,DC=com' '<search>' dn`
 
 * `-ZZ`: Require StartTLS
-* Replace `-w  "$SMB_ADMIN_PASSWORD"` with `-W` if you want to be asked for the passord and not have it on the command line. 
+* Replace `-w  "$SMB_ADMIN_PASSWORD"` with `-W` if you want to be asked for the passord and not have it on the command line.
 * ldapsearch is bad at giving error messages. Add `-d 9` to the command for maximum debug output that will give much more info.
+* If you have used `make-ca-and-certs` to make your PKI, you can use prefix `ldapsearch` command with `LDAPTLS_CACERT=./files/private/ca/ca.crt `
 * If you have a invalid TLS setup, you can prefix the `ldapsearch` command with `LDAPTLS_REQCERT=allow `
 
 ### Example searches
