@@ -2,7 +2,7 @@ version: "3.0"
 services:
   samba-ad-docker:
     build: .
-    image: $IMG_PREFIX/sambadocker
+    image: $DOCKER_IMG_PREFIX/sambadocker
     # Add this hostname to /etc/hosts
     # and point it to 127.0.0.x
     hostname: $SMB_HOSTNAME
