@@ -20,6 +20,10 @@ A simple samba-ad in ubuntu 22.04 docker for testing other tools LDAP support.
 * Run `docker-compose down` to stop samba
   * or `docker-compose down -v` to stop samda and delete data volumes
 
+## Certificates / PKI
+If you just need a development/test-PKI, `make-ca-and-certs` can generate a self-signed CA and service certificates for you.
+If you want to trust this CA on other host copy install the CA certificate in `files/private/ca/ca.crt`.
+On Debian-based linux you would i.e. copy the ca-file to `/usr/local/share/ca-certificates/ldap-test-ca.crt` and then run `update-ca-certificates`.
 
 ## Defaults
 
