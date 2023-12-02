@@ -2,18 +2,18 @@ version: "3.0"
 services:
   samba-ad-docker:
     build: .
-    image: $DOCKER_IMG_PREFIX/sambadocker
+    image: $DOCKER_IMG_PREFIX/$DOCKER_IMG_NAME
     # Add this hostname to /etc/hosts
     # and point it to 127.0.0.x
-    hostname: $SMB_HOSTNAME
-    container_name: sambad
+    hostname: $LDAP_HOSTNAME
+    container_name: $DOCKER_CONTAINER_NAME
     env_file: .env
     volumes:
        - samba_data:/var/lib/samba
     ports:
        # We only care about LDAP
-       - "0.0.0.0:389:389"
-       - "0.0.0.0:636:636"
+       - "$HOST_BIND_IP:$HOST_PORT_LDAP:389"
+       - "$HOST_BIND_IP:$HOST_PORT_LDAPS:636"
 
 volumes:
   samba_data:

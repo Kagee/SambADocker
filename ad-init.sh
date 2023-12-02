@@ -1,16 +1,17 @@
 #! /bin/bash
-
 # Set up OUs, users and groups in AD
 # based on fairytale characters
 
+source env.sh
+
 set -u
-# shellcheck disable=SC1090
-#source <(grep -v '^#' .env | sed 's/^/export /')
 
-# shellcheck disable=SC2046
-export $(grep '^SMB_OU' .env)
+if command -v docker-compose 1>/dev/null && command -v docker 1>/dev/null; then
+  ST="docker exec -it sambad samba-tool"
+elif command -v podman 1>/dev/null; then
+  ST="podman exec -it sambad samba-tool"
+fi
 
-ST="docker exec -it sambad samba-tool"
 BO="$SMB_OU"
 
 {

@@ -3,6 +3,8 @@
 set -euo pipefail
 IFS=$'\n\t'
 
+source env.sh
+
 PRIVATE=$(realpath files/private)
 
 echo "This script will delete all data in $PRIVATE.
@@ -11,7 +13,6 @@ Press ENTER to continue, CTRL-C to cancel:"
 rm -r "$PRIVATE" || true
 mkdir -p "$PRIVATE"
 touch "$PRIVATE/.gitkeep"
-source .env
 
 ALT_NAMES=""
 CN=""

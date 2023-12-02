@@ -3,7 +3,7 @@
 # Set up users and groups in IPA
 # based on fairytale characters
 
-source <(grep -v -E '^#|^$' .env | sed 's/^/export /')
+source env.sh
 
 podman exec -it freeipa-server /bin/bash -c "echo \"$IPA_ADMIN_PASSWORD\" | kinit admin"
 
