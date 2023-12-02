@@ -10,4 +10,6 @@ $SCRIPT_DIR/samba-ad-setup.sh
     exit 127
 }
 
+[[ ! -f "" ]] && cp /var/lib/samba/private/krb5.conf /etc/krb5.conf
+
 samba -i -s /var/lib/samba/private/smb.conf

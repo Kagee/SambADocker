@@ -42,7 +42,7 @@ BO="$LDAP_OU"
   # Santa, normal user and admin account
   $ST user add santa Niew9wie2eezah \
     --given-name "Santa" --surname "Claus" \
-    --mail-address="santa@northpole.example.com" \
+    --mail-address="santa@northpole.corporation.example" \
     --company="North Pole" --description="Wears a red hat"
   # Admin user has no mail, this is on purpose for a test case
   $ST user add adminsanta theiKahlee1pho \
@@ -53,7 +53,7 @@ BO="$LDAP_OU"
   # The easter bunny works for Santa most of the year
   $ST user add bunny Meish8somaeshe \
     --given-name "Easter Island" --surname "Bunny" \
-    --mail-address="bunny@northpole.example.com" \
+    --mail-address="bunny@northpole.corporation.example" \
     --company="North Pole" \
     --description="Brown fur, obsession with eggs"
 
@@ -61,7 +61,7 @@ BO="$LDAP_OU"
   # works for The Tooth Castle (TTC)
   $ST user add fairy Ohsae7iuf9eoth \
     --given-name "Tooth" --surname "Fairy" \
-    --mail-address="fairy@tooth-castle.example.com" \
+    --mail-address="fairy@tooth-castle.corporation.example" \
     --company="The Tooth Castle" \
     --description='Will pay USD 1 for anythin white, small and sharp'
 
@@ -69,7 +69,7 @@ BO="$LDAP_OU"
   # works for The Tooth Castle (TTC)
   $ST user add pål Nei8iesh6tuFe0 \
     --given-name "Askeladd" --surname "Pål" \
-    --mail-address="paal@tooth-castle.example.com" \
+    --mail-address="paal@tooth-castle.corporation.example" \
     --company="The Tooth Castle" \
     --description='Some problems with hearing.'
 
@@ -83,7 +83,7 @@ BO="$LDAP_OU"
   # https://en.wikipedia.org/wiki/Ye_Xian
   $ST user add 葉限 EiDochou8ohf \
     --given-name "限" --surname "葉" \
-    --mail-address="葉限@xn--iuzn16a.example.com" \
+    --mail-address="葉限@xn--iuzn16a.corporation.example" \
     --company="童话" \
     --description='Ye Xian. Got a pair of really nice slippers.' \
     --userou='OU=童话,OU=More Users'
@@ -98,12 +98,12 @@ BO="$LDAP_OU"
   # \u0632\u064A\u0646\u0627\u0644\u0627\u0635\u0646\u0627\u0645
   # "\u0632\u064A\u0646" "\u0627\u0644\u0627\u0635\u0646\u0627\u0645"
   # We combine this with a -, not removing space,
-  # so the grapheme clusters remain for حكاية-خيالية.example.com
+  # so the grapheme clusters remain for حكاية-خيالية.corporation.example
   # And we combine first and last name with a dot.
   # \u0632\u064A\u0646.\u0627\u0644\u0627\u0635\u0646\u0627\u0645
   $ST user add "زينالاصنام" Nei8iesh6tuFe0 \
   --given-name "زين" --surname "الاصنام" \
-  --mail-address="زين.الاصنام@xn----ymcbgctk8noa9cdc.example.com" \
+  --mail-address="زين.الاصنام@xn----ymcbgctk8noa9cdc.corporation.example" \
   --company="حكاية خيالية" \
   --description='Zayn Al-Asnam. Not so good with money and duties.' \
   --userou='OU=حكاية خيالية,OU=More Users'
@@ -112,7 +112,7 @@ BO="$LDAP_OU"
     # "\u091A\u093E\u091A\u093E""\u091A\u094C\u0927\u0930\u0940"
   $ST user add "चाचाचौधरी" aphasaeng5Bei9 \
     --given-name "चाचा" --surname "चौधरी" \
-    --mail-address="चाचाचौधरी@xn--11b2b9bual.example.com" \
+    --mail-address="चाचाचौधरी@xn--11b2b9bual.corporation.example" \
     --company="कहानी" \
     --description='Chacha Chaudhary. Frail but intelligent.' \
     --userou='OU=कहानी,OU=More Users'
