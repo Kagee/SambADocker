@@ -12,7 +12,7 @@ elif command -v podman 1>/dev/null; then
   ST="podman exec -it sambad samba-tool"
 fi
 
-BO="$SMB_OU"
+BO="$LDAP_OU"
 
 {
 

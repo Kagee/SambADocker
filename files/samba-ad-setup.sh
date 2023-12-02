@@ -38,15 +38,15 @@ samba-tool domain provision \
  --server-role=dc \
  --use-rfc2307 \
  --dns-backend=SAMBA_INTERNAL \
- --realm="${SMB_REALM}" \
- --domain="${SMB_DOMAIN}" \
- --adminpass="${SMB_ADMIN_PASSWORD}" \
+ --realm="${LDAP_REALM}" \
+ --domain="${LDAP_DOMAIN}" \
+ --adminpass="${LDAP_ADMIN_PASSWORD}" \
  --option="posix:eadb = /var/lib/samba/private/eadb.tdb"
 
 # (if a) TLS key is configured, make samba use
 # it and not generate one on it's own
-if [ -n "${SMB_KEY}" ]; then
-       sed  "/posix:eadb/a tls enabled  = yes\ntls keyfile  = ${SMB_KEY}\ntls certfile = ${SMB_CERT}\ntls cafile   = ${SMB_CA}\n" -i /etc/samba/smb.conf
+if [ -n "${LDAP_KEY}" ]; then
+       sed  "/posix:eadb/a tls enabled  = yes\ntls keyfile  = ${LDAP_KEY}\ntls certfile = ${LDAP_CERT}\ntls cafile   = ${LDAP_CA}\n" -i /etc/samba/smb.conf
 fi
 
 mv /etc/samba/smb.conf /var/lib/samba/private/smb.conf

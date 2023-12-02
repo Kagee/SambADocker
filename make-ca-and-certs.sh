@@ -1,15 +1,12 @@
 #! /bin/bash
-# bash strict mode
-set -euo pipefail
-IFS=$'\n\t'
-
 source env.sh
 
 PRIVATE=$(realpath files/private)
 
 echo "This script will delete all data in $PRIVATE.
 Press ENTER to continue, CTRL-C to cancel:"
-# read -r
+read -r
+
 rm -r "$PRIVATE" || true
 mkdir -p "$PRIVATE"
 touch "$PRIVATE/.gitkeep"
@@ -36,6 +33,11 @@ if [[ -n $OPENSSL_IPS ]]; then
 IP.$loop = $IP"
     ((loop++))
   done < <(echo "$OPENSSL_IPS" | tr ',' "\n")
+fi
+
+if ! [[ "$OPENSSL_DNS" == *"$LDAP_HOSTNAME"* ]]; then
+  echo "OPENSSL_DNS must contain LDAP_HOSTNAME"
+  exit 1
 fi
 
 if [[ $ALT_NAMES = "" ]]; then
