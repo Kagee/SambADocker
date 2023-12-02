@@ -42,7 +42,7 @@ else
   green "OK"
   TLS_OK=true
   echo -n "Testing if certificate for $LDAP_HOSTNAME:$HOST_PORT_LDAPS has correct hostname... "
-  if ! { echo | openssl s_client -verify_return_error -verify_hostname -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 1>/dev/null 2>&1; }; then
+  if ! { echo | openssl s_client -verify_return_error -verify_hostname "$LDAP_HOSTNAME" -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 1>/dev/null 2>&1; }; then
     red "FAIL"
     red "You LDAP server does not answer with a certificate that is valid for $LDAP_HOSTNAME"
     exit 1
@@ -64,11 +64,11 @@ if ! $TLS_OK; then
     green "OK"
     TLS_OK=true
     PREPEND_CA=true
-    echo -n "Testing if certificate for $LDAP_HOSTNAME:$HOST_PORT_LDAPS has correct hostname... "
-    if ! { echo | openssl s_client -verify_return_error -verifyCAfile "$CA" -verify_hostname -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 1>/dev/null 2>&1; }; then
+    echo -n "Testing if certificate for $LDAP_HOSTNAME:$HOST_PORT_LDAPS has correct hostname... ";
+    if ! { echo | openssl s_client -verify_return_error -verifyCAfile "$CA" -verify_hostname "$LDAP_HOSTNAME" -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 1>/dev/null 2>&1; }; then
       red "FAIL"
       red "You LDAP server does not answer with a certificate that is valid for $LDAP_HOSTNAME"
-      bro "$(echo | openssl s_client -verifyCAfile "$CA" -verify_hostname -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 2>&1 | openssl x509 -noout -subject -ext subjectAltName)"
+      bro "$(echo | openssl s_client -verifyCAfile "$CA" -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 2>&1 | openssl x509 -noout -subject -ext subjectAltName)"
       exit 1
     else
       green "OK"
@@ -85,6 +85,11 @@ if $PREPEND_CA; then
   bro "CA not in system store. Exporting ./files/private/ca/ca.crt as LDAPTLS_CACERT" 1>&2
   export LDAPTLS_CACERT=./files/private/ca/ca.crt
 fi
-#set -x
-#ldapsearch -ZZ -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" -d 9
+echo -n "Testing unencrypted LDAP at $LDAP_HOSTNAME:$HOST_PORT_LDAP... "
+bro "UNKNOWN"
+echo -n "Testing LDAP+STARTTLS at $LDAP_HOSTNAME:$HOST_PORT_LDAP... ";
+bro "UNKNOWN"
+echo -n "Testing LDAP+TLS/SSL at $LDAP_HOSTNAME:$HOST_PORT_LDAPS... ";
+bro "UNKNOWN"
 
+#ldapsearch -ZZ -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" -d 9
