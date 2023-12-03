@@ -4,8 +4,6 @@
 
 source env.sh
 
-set -u
-
 if command -v docker-compose 1>/dev/null && command -v docker 1>/dev/null; then
   ST="docker exec -it sambad samba-tool"
 elif command -v podman 1>/dev/null; then
@@ -15,7 +13,7 @@ fi
 BO="$LDAP_OU"
 
 {
-
+echo ${LINENO}
   # OU for admins
   $ST ou add "OU=North Pole Administrators,${BO}"
 
@@ -40,12 +38,12 @@ BO="$LDAP_OU"
   $ST ou add "OU=Organizations,OU=MISP,OU=Access Groups,${BO}"
 
   # Santa, normal user and admin account
-  $ST user add santa Niew9wie2eezah \
+  $ST user add "$USER1_SAN" "$USER1_PW" \
     --given-name "Santa" --surname "Claus" \
     --mail-address="santa@northpole.corporation.example" \
     --company="North Pole" --description="Wears a red hat"
   # Admin user has no mail, this is on purpose for a test case
-  $ST user add adminsanta theiKahlee1pho \
+  $ST user add "$ADMIN_USER1_SAN" "$ADMIN_USER1_PW" \
     --given-name "AdminSanta" --surname "Claus" \
     --company="North Pole" --description="Wears two red hats" \
     --userou='OU=North Pole Administrators'
@@ -72,6 +70,7 @@ BO="$LDAP_OU"
     --mail-address="paal@tooth-castle.corporation.example" \
     --company="The Tooth Castle" \
     --description='Some problems with hearing.'
+echo ${LINENO}
 
   # https://en.wikipedia.org/wiki/Urashima_Tar%C5%8D
   $ST user add 浦島太郎 phee0udai3Ae \
@@ -118,7 +117,7 @@ BO="$LDAP_OU"
     --userou='OU=कहानी,OU=More Users'
 
   # Service user for i.e. apache/misp
-  $ST user add srv_misp eew5Shiegheevua5iz9rohvi \
+  $ST user add "$SERVICE_USER1_SAN" "$SERVICE_USET1_PW" \
     --userou='OU=Service Users'
 
   # MISP Access groups
@@ -157,6 +156,7 @@ BO="$LDAP_OU"
     $ST group addmembers O_North_Pole $USER
   done
 
+echo ${LINENO}
   $ST group addmembers O_TTC fairy
   $ST group addmembers O_グループ１ 浦島太郎
   $ST group addmembers O_第一组 葉限
