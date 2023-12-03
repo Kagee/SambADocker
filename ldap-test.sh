@@ -1,26 +1,11 @@
 #! /bin/bash
 source env.sh
-function green {
-  printf "\033[1;32m%s\033[0m\n" "$1"
-}
-function red {
-  printf "\033[0;31m%s\033[0m\n" "$1"
-}
-function bro {
-  printf "\033[0;33m%s\033[0m\n" "$1"
-}
+function green { printf "\033[1;32m%s\033[0m\n" "$1"; }
+function red { printf "\033[0;31m%s\033[0m\n" "$1"; }
+function bro { printf "\033[0;33m%s\033[0m\n" "$1"; }
 
 if [[ -z "$(dig +short "$LDAP_HOSTNAME")" ]]; then
   echo "LDAP_HOSTNAME ($LDAP_HOSTNAME) is not pointing to anything!" 1>&2
-  exit 1
-fi
-
-if command -v docker 1>/dev/null; then
-  RUNTIME=docker
-elif command -v podman 1>/dev/null; then
-  RUNTIME=podman
-else
-  echo "Neither docker nor podman appears to be installed!" 1>&2
   exit 1
 fi
 
@@ -29,13 +14,12 @@ if ! command -v ldapsearch 1>/dev/null; then
   exit 1
 fi
 
-STARTTLS_OK=false
 TLS_OK=false
 TLS_HOSTNAME_OK=false
 PREPEND_CA=false
 CA="./files/private/ca/ca.crt"
 
-echo -n "Testing if openssl trusts CA used for $LDAP_HOSTNAME:$HOST_PORT_LDAPS ... "
+echo -n "Testing if openssl trusts CA used for $LDAP_HOSTNAME:$HOST_PORT_LDAPS using system ca store... "
 if ! { echo | openssl s_client -verify_return_error -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 1>/dev/null 2>&1; }; then
   red "FAIL"
 else
@@ -57,7 +41,7 @@ if ! $TLS_OK; then
     red "CA not in system store, and could not read CA from $CA"
     exit 1
   fi
-  echo -n "Testing if openssl trusts CA used for $LDAP_HOSTNAME:$HOST_PORT_LDAPS when forced... "
+  echo -n "Testing if openssl trusts CA used for $LDAP_HOSTNAME:$HOST_PORT_LDAPS when supplied... "
   if ! { echo | openssl s_client -verify_return_error -verifyCAfile "$CA" -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 1>/dev/null 2>&1; }; then
     red "FAIL"
   else
@@ -72,7 +56,6 @@ if ! $TLS_OK; then
       exit 1
     else
       green "OK"
-      TLS_HOSTNAME_OK=true
     fi
   fi
 fi
@@ -86,10 +69,78 @@ if $PREPEND_CA; then
   export LDAPTLS_CACERT=./files/private/ca/ca.crt
 fi
 echo -n "Testing unencrypted LDAP at $LDAP_HOSTNAME:$HOST_PORT_LDAP... "
-bro "UNKNOWN"
+LDAP_STDOUT=$(ldapsearch -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" -w "invalid" 2>&1)
+if [[ $? -eq 49 ]]; then
+  green "OK - Invalid credentials (49)"
+else
+ red "FAIL"
+ red "Did not get expected Invalid credentials (49)":
+ bro "$LDAP_STDOUT"
+ exit 1
+fi
 echo -n "Testing LDAP+STARTTLS at $LDAP_HOSTNAME:$HOST_PORT_LDAP... ";
-bro "UNKNOWN"
+LDAP_STDOUT=$(ldapsearch -ZZ -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" -w "invalid" 2>&1)
+if [[ $? -eq 49 ]]; then
+  green "OK - Invalid credentials (49)"
+else
+ red "FAIL"
+ red "Did not get expected Invalid credentials (49)":
+ bro "$LDAP_STDOUT"
+ exit 1
+fi
 echo -n "Testing LDAP+TLS/SSL at $LDAP_HOSTNAME:$HOST_PORT_LDAPS... ";
-bro "UNKNOWN"
-
-#ldapsearch -ZZ -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" -d 9
+LDAP_STDOUT=$(ldapsearch -H "ldaps://$LDAP_HOSTNAME:$HOST_PORT_LDAPS" -w "invalid" 2>&1)
+if [[ $? -eq 49 ]]; then
+  green "OK - Invalid credentials (49)"
+else
+ red "FAIL"
+ red "Did not get expected Invalid credentials (49)":
+ bro "$LDAP_STDOUT"
+ exit 1
+fi
+bro "Connection tests OK. Will continue on LDAP+STARTTLS"
+echo -n "Testing auth using Administrator account 'CN=Administrator,CN=Users,$LDAP_OU' / '$LDAP_ADMIN_PASSWORD'... ";
+if LDAP_STDOUT=$(ldapsearch \
+  -ZZ \
+  -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" \
+  -D "CN=Administrator,CN=Users,$LDAP_OU" \
+  -w "$LDAP_ADMIN_PASSWORD" \
+  -b "$LDAP_OU" \
+  "dn=CN=Administrator,CN=Users,$LDAP_OU" 2>&1); then
+  green "OK - Success (0)"
+else
+ red "FAIL"
+ red "Did not get expected Success (0)":
+ bro "$LDAP_STDOUT"
+ exit 1
+fi
+echo -n "Testing auth using santa account '$LDAP_DOMAIN\\$USER1_SAN' / '$USER1_PW'... ";
+if LDAP_STDOUT=$(ldapsearch \
+  -ZZ \
+  -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" \
+  -D "$LDAP_DOMAIN\\$USER1_SAN" \
+  -w "$USER1_PW" \
+  -b "$LDAP_OU" \
+  "dn=CN=Administrator,CN=Users,$LDAP_OU" 2>&1); then
+  green "OK - Success (0)"
+else
+ red "FAIL"
+ red "Did not get expected Success (0)":
+ bro "$LDAP_STDOUT"
+ exit 1
+fi
+echo -n "Testing auth using $SERVICE_USER1_SAN service account '$SERVICE_USER1_SAN@$LDAP_REALM' / '$SERVICE_USET1_PW'... ";
+if LDAP_STDOUT=$(ldapsearch \
+  -ZZ \
+  -H "ldap://$LDAP_HOSTNAME:$HOST_PORT_LDAP" \
+  -D "$SERVICE_USER1_SAN@$LDAP_REALM" \
+  -w "$SERVICE_USET1_PW" \
+  -b "$LDAP_OU" \
+  "dn=CN=Administrator,CN=Users,$LDAP_OU" 2>&1); then
+  green "OK - Success (0)"
+else
+ red "FAIL"
+ red "Did not get expected Success (0)":
+ bro "$LDAP_STDOUT"
+ exit 1
+fi
