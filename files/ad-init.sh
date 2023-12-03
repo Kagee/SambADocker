@@ -2,18 +2,12 @@
 # Set up OUs, users and groups in AD
 # based on fairytale characters
 
-source env.sh
-
-if command -v docker-compose 1>/dev/null && command -v docker 1>/dev/null; then
-  ST="docker exec -it sambad samba-tool"
-elif command -v podman 1>/dev/null; then
-  ST="podman exec -it sambad samba-tool"
-fi
+ST="samba-tool"
 
 BO="$LDAP_OU"
+P=n
 
 {
-echo ${LINENO}
   # OU for admins
   $ST ou add "OU=North Pole Administrators,${BO}"
 
@@ -70,7 +64,6 @@ echo ${LINENO}
     --mail-address="paal@tooth-castle.corporation.example" \
     --company="The Tooth Castle" \
     --description='Some problems with hearing.'
-echo ${LINENO}
 
   # https://en.wikipedia.org/wiki/Urashima_Tar%C5%8D
   $ST user add 浦島太郎 phee0udai3Ae \
@@ -136,7 +129,7 @@ echo ${LINENO}
   $ST group add R_MISP_Org_童话 --description='MISP Org 童话 (CH)' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
   $ST group add "R_MISP_Org_حكايةخيالية"  --description='MISP Org حكايةخيالية (AR)' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
   $ST group add "R_MISP_Org_कहानी" --description='MISP Org कहानी (HI)' --groupou='OU=Organizations,OU=MISP,OU=Access Groups'
-  
+
   $ST group add O_North_Pole --description='Group for users emplyed by North Pole'
   $ST group add O_TTC --description='Group for users emplyed by The Tooth Castle'
   $ST group add O_グループ１ --description='Group 1 (JP)'
@@ -156,7 +149,6 @@ echo ${LINENO}
     $ST group addmembers O_North_Pole $USER
   done
 
-echo ${LINENO}
   $ST group addmembers O_TTC fairy
   $ST group addmembers O_グループ１ 浦島太郎
   $ST group addmembers O_第一组 葉限
@@ -194,6 +186,15 @@ echo ${LINENO}
   $ST group addmembers "R_MISP_Org_حكايةخيالية" "O_مجموعة 1"
   $ST group addmembers "R_MISP_Org_कहानी" "O_समूह १"
 
-} | grep -v 'already exists'
-
-echo "Init complete. If there was no output there were no errors and all values already existed."
+} 2>&1 | while read -r L;
+do
+  if [[ "$L" == *"already exists"* ]]; then
+    echo -n '.';
+    P=.
+  else
+    [[ "$P" == '.' ]] && echo
+     echo "$L";
+     P=n
+  fi;
+done
+echo && echo 'Init complete.'

@@ -27,7 +27,8 @@ WORKDIR /opt/sambadocker
 
 COPY files/samba-ad-run.sh /opt/sambadocker/
 COPY files/samba-ad-setup.sh /opt/sambadocker/
- 
+COPY files/ad-init.sh /opt/sambadocker/
+
 EXPOSE 80
 # Hardcode config so supervisord
 # complains less
