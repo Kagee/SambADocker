@@ -4,11 +4,6 @@ function green { printf "\033[1;32m%s\033[0m\n" "$1"; }
 function red { printf "\033[0;31m%s\033[0m\n" "$1"; }
 function bro { printf "\033[0;33m%s\033[0m\n" "$1"; }
 
-if [[ -z "$(dig +short "$LDAP_HOSTNAME")" ]]; then
-  echo "LDAP_HOSTNAME ($LDAP_HOSTNAME) is not pointing to anything!" 1>&2
-  exit 1
-fi
-
 if ! command -v ldapsearch 1>/dev/null; then
   echo "ldapsearch is not installed!" 1>&2
   exit 1
@@ -18,6 +13,24 @@ TLS_OK=false
 TLS_HOSTNAME_OK=false
 PREPEND_CA=false
 CA="./files/private/ca/ca.crt"
+
+echo -n "Testing if $LDAP_HOSTNAME is poiting to anything... "
+if [[ -z "$(dig +short "$LDAP_HOSTNAME")" ]]; then
+  red "FAIL"
+  red "LDAP_HOSTNAME ($LDAP_HOSTNAME) is not pointing to anything!"
+  exit 1
+else
+  green "OK ($(dig +short "$LDAP_HOSTNAME"| tr '\n' ' ' | xargs))"
+fi
+
+echo -n "Testing if something is listening on $LDAP_HOSTNAME:$HOST_PORT_LDAPS... "
+if ! nc -4 -z $LDAP_HOSTNAME $HOST_PORT_LDAPS; then
+  red "FAIL"
+  red "Nothing is listening on $LDAP_HOSTNAME"
+  exit 1
+else
+  green "OK"
+fi
 
 echo -n "Testing if openssl trusts CA used for $LDAP_HOSTNAME:$HOST_PORT_LDAPS using system ca store... "
 if ! { echo | openssl s_client -verify_return_error -connect "$LDAP_HOSTNAME:$HOST_PORT_LDAPS" 1>/dev/null 2>&1; }; then
